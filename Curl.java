@@ -10,7 +10,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +26,7 @@ public class Curl {
     private String url;
     private String method;
     private String param;
+    private Proxy proxy;
     private int responseCod;
     
 
@@ -41,6 +44,8 @@ public class Curl {
             URL url = new URL(this.url);
             
             httpURLConnection = (HttpURLConnection) url.openConnection();
+            if(this.proxy != null)
+                httpURLConnection = (HttpURLConnection) url.openConnection(this.proxy);
             
             if(this.method != null)
                 httpURLConnection.setRequestMethod(this.method);
@@ -106,5 +111,9 @@ public class Curl {
      */
     public int getResponseCod(){
         return this.responseCod;
+    }
+    
+    public void setProxy(String proxy, int porta) {
+        this.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxy, porta));
     }
 }
